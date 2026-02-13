@@ -1,64 +1,183 @@
-# Facial Emotion Recognition Using Convolutional Neural Networks
+Below is a research-lab level README.
+It is more technical, less descriptive, and emphasizes architectural reasoning, experimental design, and analytical findings.
 
-This repository contains the research paper **"Facial Emotion Recognition Using Convolutional Neural Networks"** and its accompanying implementation in Python (Google Colab).  
-The project explores how CNN architectures such as **VGGNet** and **ResNet50** can recognize human emotions from facial images.
+You can paste this directly into your repository.
 
----
+Facial Emotion Recognition via Deep Convolutional Architectures
+Project Summary
 
-## 📄 Paper
-**Title:** Facial Emotion Recognition Using Convolutional Neural Networks  
-**Author:** Milana Pak  
-**Abstract:**  
-This study investigates the ability of CNNs to detect human emotions—anger, fear, and happiness—from facial images. Using the VGGNet and ResNet50 architectures, several experiments were performed with different optimization strategies. Results show that CNNs can often predict emotions correctly, although certain emotions such as fear and anger are frequently confused with happiness due to dataset complexity.
+This project investigates Facial Emotion Recognition (FER) using deep convolutional neural networks, with emphasis on:
 
-Full paper: [`Facial Emotion Recognition Using Convolutional Neural Networks.pdf`](Facial%20Emotion%20Recognition%20Using%20Convolutional%20Neural%20Networks.pdf)
+Architectural comparison (VGG vs. ResNet)
 
----
+Optimization behavior
 
-## 🧠 Model Overview
-The CNN pipeline consists of:
-1. **Face detection and preprocessing** – grayscale conversion and resizing to 48×48.  
-2. **Convolutional + pooling layers** – for feature extraction.  
-3. **Fully connected layers** – for classification.  
-4. **Output layer** – predicting one of the emotion classes.
+Confusion analysis between semantically adjacent classes
 
-Architectures used:
-- **VGGNet**
-- **ResNet50**
+Limitations of unimodal visual supervision
 
----
+The accompanying research manuscript is available here:
+📄 Facial Emotion Recognition using Convolutional Neural Networks 
 
-## 📊 Dataset
-- ~10,000 facial images labeled with 3 emotions: *anger, fear, happiness*  
-- Grayscale, 48×48 pixels  
-- Split into training and testing subsets  
+Facial Emotion Recognition Usin…
 
-*(Dataset is not uploaded here due to storage limits. You can replace this section with a dataset link if you decide to share it.)*
+Problem Formulation
 
----
+Given a grayscale facial image 
+𝑥
+∈
+𝑅
+48
+×
+48
+x∈R
+48×48
+, the task is to learn a function:
 
-## 💻 Code
-Notebook: [`Milana_Facial_Recog_v2_with_data_save.ipynb`](Milana_Facial_Recog_v2_with_data_save.ipynb)
+𝑓
+𝜃
+(
+𝑥
+)
+→
+𝑦
+f
+θ
+	​
 
-The notebook includes:
-- Data preprocessing  
-- CNN model training  
-- Evaluation with confusion matrices  
-- Experiment comparison between VGG and ResNet50  
+(x)→y
 
-Run it in Google Colab:
-1. Open the `.ipynb` in Colab.  
-2. Upload your dataset to the `/data` folder.  
-3. Run all cells.  
+where 
+𝑦
+∈
+{
+anger, fear, happiness, sadness, neutral, surprise
+}
+y∈{anger, fear, happiness, sadness, neutral, surprise}.
 
----
+The objective is to minimize categorical cross-entropy:
 
-## 🧩 Results Summary
-| Model      | Emotions Tested | Accuracy | Notes |
-|-------------|----------------|-----------|--------|
-| VGGNet      | Fear, Anger     | ~0.18     | Confused fear with happiness |
-| ResNet50    | Fear, Anger, Happy | ~0.22 | Improved happy recognition, but anger confusion remains |
+𝐿
+=
+−
+∑
+𝑖
+=
+1
+𝐶
+𝑦
+𝑖
+log
+⁡
+(
+𝑦
+^
+𝑖
+)
+L=−
+i=1
+∑
+C
+	​
 
----
+y
+i
+	​
 
+log(
+y
+^
+	​
 
+i
+	​
+
+)
+
+while analyzing representational behavior and failure modes.
+
+Dataset
+
+10,000 labeled facial images
+
+Preprocessed to 48×48 grayscale
+
+Experiments conducted on:
+
+3-class setting (anger, fear, happiness)
+
+Extended 6-class setting
+
+Architectural Design
+1. VGG16 / VGG19
+
+Deep convolutional stacks with small receptive fields (3×3 kernels)
+
+Hierarchical feature extraction
+
+No residual connections
+
+Fully connected classification head
+
+Used to evaluate performance under standard deep CNN feature extraction.
+
+2. ResNet50
+
+50-layer residual architecture
+
+Identity shortcut connections
+
+Improved gradient propagation
+
+Higher representational capacity
+
+Used to analyze impact of residual learning on subtle inter-class discrimination.
+
+Training Configuration
+
+Loss: Cross-Entropy
+
+Optimizers: SGD / Adam (comparative experiments)
+
+Learning rate scheduling
+
+Epoch-based training
+
+Evaluation via:
+
+Accuracy
+
+Confusion matrices
+
+Qualitative misclassification inspection
+
+Experimental Findings
+1. Systematic Class Ambiguity
+
+Confusion matrices revealed strong overlap between:
+
+Fear ↔ Happiness
+
+Anger ↔ Happiness
+
+This suggests that purely visual supervision encourages reliance on dominant features (e.g., mouth curvature), rather than distributed facial representations.
+
+2. Architectural Impact
+
+ResNet50 showed modest improvements over VGG in extended emotion settings, suggesting:
+
+Residual connections help stabilize deeper representations.
+
+However, deeper capacity alone does not resolve semantic ambiguity.
+
+3. Representation Limitation
+
+Observed failure modes indicate:
+
+High intra-class variability.
+
+Over-reliance on localized discriminative regions.
+
+Lack of contextual or relational modeling.
+
+This exposes a key limitation of global CNN pooling under unimodal learning.
