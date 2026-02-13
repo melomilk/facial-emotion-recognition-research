@@ -174,8 +174,4 @@ Potential extensions include:
 ## Author
 
 Milana Pak  
-Information Systems  
-Kazakh-British Technical University  
 
-GitHub:  
-LinkedIn:
