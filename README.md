@@ -1,183 +1,181 @@
-Below is a research-lab level README.
-It is more technical, less descriptive, and emphasizes architectural reasoning, experimental design, and analytical findings.
+# Facial Emotion Recognition via Deep Convolutional Architectures
 
-You can paste this directly into your repository.
+## Project Overview
 
-Facial Emotion Recognition via Deep Convolutional Architectures
-Project Summary
+This project investigates **Facial Emotion Recognition (FER)** using deep convolutional neural networks, with emphasis on:
 
-This project investigates Facial Emotion Recognition (FER) using deep convolutional neural networks, with emphasis on:
+- Architectural comparison (VGG vs. ResNet)
+- Optimization behavior
+- Systematic confusion between semantically adjacent classes
+- Limitations of unimodal visual supervision
 
-Architectural comparison (VGG vs. ResNet)
+The accompanying research manuscript is available in this repository:
+*Facial Emotion Recognition using Convolutional Neural Networks*
 
-Optimization behavior
+---
 
-Confusion analysis between semantically adjacent classes
+## Problem Formulation
 
-Limitations of unimodal visual supervision
+Given a grayscale facial image \( x \in \mathbb{R}^{48 \times 48} \), the goal is to learn a function:
 
-The accompanying research manuscript is available here:
-📄 Facial Emotion Recognition using Convolutional Neural Networks 
+\[
+f_\theta(x) \rightarrow y
+\]
 
-Facial Emotion Recognition Usin…
+where  
 
-Problem Formulation
+\[
+y \in \{\text{anger, fear, happiness, sadness, neutral, surprise}\}
+\]
 
-Given a grayscale facial image 
-𝑥
-∈
-𝑅
-48
-×
-48
-x∈R
-48×48
-, the task is to learn a function:
+The model is trained by minimizing categorical cross-entropy:
 
-𝑓
-𝜃
-(
-𝑥
-)
-→
-𝑦
-f
-θ
-	​
+\[
+\mathcal{L} = - \sum_{i=1}^{C} y_i \log(\hat{y}_i)
+\]
 
-(x)→y
+Evaluation focuses not only on accuracy but also on representational behavior and failure modes.
 
-where 
-𝑦
-∈
-{
-anger, fear, happiness, sadness, neutral, surprise
-}
-y∈{anger, fear, happiness, sadness, neutral, surprise}.
+---
 
-The objective is to minimize categorical cross-entropy:
+## Dataset
 
-𝐿
-=
-−
-∑
-𝑖
-=
-1
-𝐶
-𝑦
-𝑖
-log
-⁡
-(
-𝑦
-^
-𝑖
-)
-L=−
-i=1
-∑
-C
-	​
+- >10,000 labeled facial images  
+- Preprocessed to **48×48 grayscale**
+- Experiments conducted on:
+  - 3-class setting (anger, fear, happiness)
+  - Extended 6-class setting
 
-y
-i
-	​
+---
 
-log(
-y
-^
-	​
+## Architectural Design
 
-i
-	​
+### 1. VGG16 / VGG19
 
-)
-
-while analyzing representational behavior and failure modes.
-
-Dataset
-
-10,000 labeled facial images
-
-Preprocessed to 48×48 grayscale
-
-Experiments conducted on:
-
-3-class setting (anger, fear, happiness)
-
-Extended 6-class setting
-
-Architectural Design
-1. VGG16 / VGG19
-
-Deep convolutional stacks with small receptive fields (3×3 kernels)
-
-Hierarchical feature extraction
-
-No residual connections
-
-Fully connected classification head
+- Deep convolutional stacks with 3×3 kernels  
+- Hierarchical feature extraction  
+- No residual connections  
+- Fully connected classification head  
 
 Used to evaluate performance under standard deep CNN feature extraction.
 
-2. ResNet50
+---
 
-50-layer residual architecture
+### 2. ResNet50
 
-Identity shortcut connections
+- 50-layer residual architecture  
+- Identity shortcut connections  
+- Improved gradient propagation  
+- Higher representational capacity  
 
-Improved gradient propagation
+Used to analyze the impact of residual learning on subtle inter-class discrimination.
 
-Higher representational capacity
+---
 
-Used to analyze impact of residual learning on subtle inter-class discrimination.
+## Training Configuration
 
-Training Configuration
+- Loss: Cross-Entropy  
+- Optimizers: SGD / Adam (comparative experiments)  
+- Learning rate scheduling  
+- Epoch-based training  
+- Evaluation metrics:
+  - Accuracy
+  - Confusion matrices
+  - Qualitative misclassification analysis
 
-Loss: Cross-Entropy
+---
 
-Optimizers: SGD / Adam (comparative experiments)
+## Experimental Findings
 
-Learning rate scheduling
-
-Epoch-based training
-
-Evaluation via:
-
-Accuracy
-
-Confusion matrices
-
-Qualitative misclassification inspection
-
-Experimental Findings
-1. Systematic Class Ambiguity
+### 1. Systematic Class Ambiguity
 
 Confusion matrices revealed strong overlap between:
 
-Fear ↔ Happiness
-
-Anger ↔ Happiness
+- Fear ↔ Happiness  
+- Anger ↔ Happiness  
 
 This suggests that purely visual supervision encourages reliance on dominant features (e.g., mouth curvature), rather than distributed facial representations.
 
-2. Architectural Impact
+---
+
+### 2. Architectural Impact
 
 ResNet50 showed modest improvements over VGG in extended emotion settings, suggesting:
 
-Residual connections help stabilize deeper representations.
+- Residual connections stabilize deeper representations  
+- Increased capacity alone does not resolve semantic ambiguity  
 
-However, deeper capacity alone does not resolve semantic ambiguity.
+---
 
-3. Representation Limitation
+### 3. Representation Limitation
 
 Observed failure modes indicate:
 
-High intra-class variability.
-
-Over-reliance on localized discriminative regions.
-
-Lack of contextual or relational modeling.
+- High intra-class variability  
+- Over-reliance on localized discriminative regions  
+- Lack of contextual or relational modeling  
 
 This exposes a key limitation of global CNN pooling under unimodal learning.
+
+---
+
+## Analytical Reflection
+
+Traditional CNN classifiers operate under a **global feature aggregation paradigm**, where semantic similarity is inferred from visual embedding proximity alone.
+
+However, emotional expressions often require:
+
+- Fine-grained regional attention  
+- Contextual reasoning  
+- Multi-signal integration  
+
+The confusion between semantically adjacent classes suggests:
+
+\[
+\text{Visual similarity} \not\equiv \text{Semantic equivalence}
+\]
+
+This motivates exploration of:
+
+- Region-level modeling  
+- Cross-modal supervision  
+- Attention-guided feature refinement  
+- Interaction-based representation learning  
+---
+
+## Reproducibility
+
+### Dependencies
+
+```bash
+pip install torch torchvision numpy matplotlib scikit-learn
+```
+
+### Execution
+
+```bash
+jupyter notebook Milana_Facial_Recog_v2_with_data_save.ipynb
+```
+
+---
+
+## Future Directions
+
+Potential extensions include:
+
+- Region-based modeling (e.g., R-CNN feature extraction)
+- Contrastive learning for fine-grained alignment
+- Cross-modal supervision incorporating textual emotion descriptors
+- Attention-guided training to reduce shortcut learning
+- Robustness evaluation under noisy or partial facial cues
+
+---
+
+## Author
+
+Milana Pak  
+Information Systems  
+Kazakh-British Technical University  
+
+GitHub:  
+LinkedIn:
